@@ -10,26 +10,26 @@ class Parser {
     String name;
     VariableTable input;
     VariableTable output;
-    List<Chip> parts;
+    List<Chip> parts = [];
 
     for (final String line in LineSplitter().convert(hdlFile)) {
       if (line.contains('CHIP')) {
-        _ParserFunctions.getChipName(line);
+        name = _ParserFunctions.getChipName(line);
       }
 
       if (line.contains('IN')) {
-        _ParserFunctions.getIOVariables(line);
+        input = _ParserFunctions.getIOVariables(line);
       }
 
       if (line.contains('OUT')) {
-        _ParserFunctions.getIOVariables(line, false);
+        output = _ParserFunctions.getIOVariables(line, false);
       }
 
       if (line.contains('PARTS:')) {
         for (final String partLine in LineSplitter()
             .convert(hdlFile.substring(hdlFile.indexOf('PARTS:')))) {
-          if (line == 'PARTS:' || line == '}') continue;
-          _ParserFunctions.getParts(partLine);
+          if (line.contains('PARTS:') || line.contains('}')) continue;
+          parts.add(_ParserFunctions.getPart(partLine));
         }
       }
     }
@@ -48,7 +48,7 @@ class Parser {
     result &= file.contains('PARTS:');
 
     if (result) {
-      String chipPattern = r'CHIP[ \t]\w+[ \t]*\{(?:[\s\S][^\{\}])+\}';
+      String chipPattern = r'CHIP[ \t]\w+[ \t]*\{(?:[^\{\}]+)\}';
       String inputPattern =
           r'IN[ \t](?:[ \t]*\w+(?:\[\d+\]){0,1}[ \t]*\,)*(?:[ \t]*\w+\;$)';
       String outputPattern =
@@ -94,7 +94,7 @@ class _ParserFunctions {
     return VariableTable(result);
   }
 
-  static List<Chip> getParts(String line) {
+  static Chip getPart(String line) {
     String pattern =
         r'(?<chipName>\w+)(?=[ \t]*\()|(?<variables>\w+(?:\[\d+\]){0,1}[ \t]*\=[ \t]*\w+(?:\[\d+\]){0,1}[ \t]*)';
     RegExp regexp = RegExp(pattern);
@@ -119,51 +119,48 @@ class _ParserFunctions {
       }
     }
 
-    List<Chip> parts = [];
+    late Chip part;
     result.forEach((k, v) {
       switch (k) {
         case 'And':
-          parts.add(And(
+          part = And(
             a: v.values.elementAt(0),
             b: v.values.elementAt(1),
             output: v.values.elementAt(2),
-          ));
+          );
         case 'Or':
-          parts.add(Or(
+          part = Or(
             a: v.values.elementAt(0),
             b: v.values.elementAt(1),
             output: v.values.elementAt(2),
-          ));
+          );
         case 'Not':
-          parts.add(Not(
+          part = Not(
             input: v.values.elementAt(0),
             output: v.values.elementAt(1),
-          ));
+          );
         case 'Nand':
-          parts.add(Nand(
+          part = Nand(
             a: v.values.elementAt(0),
             b: v.values.elementAt(1),
             output: v.values.elementAt(2),
-          ));
+          );
         default:
-          parts.add(
-            Chip(
-              name: k,
-              input: VariableTable.manual(
-                Map.fromEntries(
-                  [
-                    for (int i = 0; i < v.length - 1; i++)
-                      v.entries.elementAt(i),
-                  ],
-                ),
+          part = Chip(
+            name: k,
+            input: VariableTable.manual(
+              Map.fromEntries(
+                [
+                  for (int i = 0; i < v.length - 1; i++) v.entries.elementAt(i),
+                ],
               ),
-              output: VariableTable.manual(Map.fromEntries([v.entries.last])),
-              parts: [],
             ),
+            output: VariableTable.manual(Map.fromEntries([v.entries.last])),
+            parts: [],
           );
       }
     });
 
-    return parts;
+    return part;
   }
 }
