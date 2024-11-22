@@ -1,27 +1,45 @@
 class ParsingErrorHandler {
   static void _validateBus(String line) {
-    // Bus size without pin
-    if (line.contains(RegExp(r'(?<!\w)(?:\[\d*\])'))) {
-      throw ParsingException(
-        'Invalid pin syntax',
-        'Cannot have a bus size without a pin',
-      );
-    }
+    if (line.contains(RegExp(r'\[|\]'))) {
+      // Un-even square brackets pair
+      if (RegExp(r'\[|\]').allMatches(line).length % 2 != 0) {
+        throw ParsingException(
+          'Invalid bus syntax',
+          'Try adding an opening or closing square brackets (\'[\' or \']\')',
+        );
+      }
 
-    // Empty bus size
-    if (line.contains(RegExp(r'\w+\[\]'))) {
-      throw ParsingException(
-        'Invalid bus syntax',
-        'Cannot have an empty bus size',
-      );
-    }
+      // Bus without pin
+      if (line.contains(RegExp(r'(?<!\w)(?:\[\d*\])'))) {
+        throw ParsingException(
+          'Invalid pin syntax',
+          'Cannot have a bus without a pin',
+        );
+      }
 
-    // Non-digit bus size
-    if (line.contains(RegExp(r'\w+\[.*[^\d.]+.*\]'))) {
-      throw ParsingException(
-        'Invalid bus size',
-        'Try removing letters and/or symbols',
-      );
+      // Non-digit or empty bus interval
+      if (line.contains('..') && !line.contains(RegExp(r'\[\d+\.\.\d+\]'))) {
+        throw ParsingException(
+          'Invalid bus interval syntax',
+          'Try removing letters and symbols or adding a starting or ending bit ([\'start\'..\'end\'])',
+        );
+      }
+
+      // Empty bus size
+      if (line.contains(RegExp(r'\w+\[\]'))) {
+        throw ParsingException(
+          'Invalid bus syntax',
+          'Cannot have an empty bus size',
+        );
+      }
+
+      // Non-digit bus size
+      if (!line.contains(RegExp(r'\[\d+\]'))) {
+        throw ParsingException(
+          'Invalid bus size syntax',
+          'Try removing letters and/or symbols',
+        );
+      }
     }
 
     // TODO(antarch): bus interval

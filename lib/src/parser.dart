@@ -120,9 +120,8 @@ class Parser {
     }
 
     if (file.contains('PARTS:')) {
-      // TODO(antarch): bus interval
       String partsPattern =
-          r'\w+[ \t]*\((?:[ \t]*\w+(?:\[\d+\]){0,1}[ \t]*\=[ \t]*\w+(?:\[\d+\]){0,1}[ \t]*\,)*(?:[ \t]*\w+(?:\[\d+\]){0,1}[ \t]*\=[ \t]*\w+(?:\[\d+\]){0,1}[ \t]*\)\;$)';
+          r'\w+[ \t]*\((?:[ \t]*\w+(?:\[(?:\d+|\d+\.\.\d+)\]){0,1}[ \t]*\=[ \t]*\w+(?:\[(?:\d+|\d+\.\.\d+)]){0,1}[ \t]*\,)*(?:[ \t]*\w+(?:\[(?:\d+|\d+\.\.\d+)\]){0,1}[ \t]*\=[ \t]*\w+(?:\[(?:\d+|\d+\.\.\d+)\]){0,1}[ \t]*\)\;$)';
 
       for (final String line
           in LineSplitter().convert(file.substring(file.indexOf('PARTS:')))) {
@@ -166,9 +165,8 @@ class _ParserFunctions {
   }
 
   static Chip getPart(String line) {
-    // TODO(antarch): bus interval
     String pattern =
-        r'(?<chipName>\w+)(?=[ \t]*\()|(?<variables>\w+(?:\[\d+\]){0,1}[ \t]*\=[ \t]*\w+(?:\[\d+\]){0,1}[ \t]*)';
+        r'(?<chipName>\w+)(?=[ \t]*\()|(?<variables>\w+(?:\[(?:\d+|\d+\.\.\d+)\]){0,1}[ \t]*\=[ \t]*\w+(?:\[(?:\d+|\d+\.\.\d+)\]){0,1}[ \t]*)';
     RegExp regexp = RegExp(pattern);
     String? chipName;
     Map<String, Map<Variable, Variable>> result = {};
