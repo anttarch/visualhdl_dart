@@ -3,6 +3,10 @@ import 'dart:core';
 class Variable {
   Variable(this.name, [this.size = 1]);
 
+  Variable.on() : this('true');
+
+  Variable.off() : this('false');
+
   String name;
   int size;
   (int, int?)? bus;
