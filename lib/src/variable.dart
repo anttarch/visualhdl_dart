@@ -9,7 +9,7 @@ class Variable {
 
   String name;
   int size;
-  (int, int?)? bus;
+  ({int start, int? end})? bus;
 
   String getSizeString() {
     if (size > 1) return '$name[$size]';
@@ -22,15 +22,15 @@ class Variable {
       return getSizeString();
     }
 
-    if (bus!.$2 != null) return '$name[${bus!.$1}..${bus!.$2}]';
-    return '$name[${bus!.$1}]';
+    if (bus!.end != null) return '$name[${bus!.start}..${bus!.end}]';
+    return '$name[${bus!.start}]';
   }
 
   Variable operator [](int size) {
     if (bus != null) {
-      bus = (bus!.$1, size);
+      bus = (start: bus!.start, end: size);
     } else {
-      bus = (size, null);
+      bus = (start: size, end: null);
     }
 
     return this;
