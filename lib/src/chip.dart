@@ -7,6 +7,11 @@ class ChipBuilder {
   VariableTable? _output;
   List<Chip>? _parts;
 
+  String get name => _name ?? '';
+  VariableTable get input => _input ?? VariableTable([]);
+  VariableTable get output => _output ?? VariableTable([]);
+  List<Chip> get parts => _parts ?? [];
+
   set name(String newValue) => _name = newValue;
   set input(VariableTable newValue) => _input = newValue;
   set output(VariableTable newValue) => _output = newValue;
