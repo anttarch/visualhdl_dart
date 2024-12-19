@@ -1,6 +1,32 @@
 import 'dart:core';
 import 'package:visualhdl_dart/src/variable.dart';
 
+class ChipBuilder {
+  String? _name;
+  VariableTable? _input;
+  VariableTable? _output;
+  List<Chip>? _parts;
+
+  set name(String newValue) => _name = newValue;
+  set input(VariableTable newValue) => _input = newValue;
+  set output(VariableTable newValue) => _output = newValue;
+  set parts(List<Chip> newValue) => _parts = newValue;
+
+  Chip build() {
+    assert(_name != null);
+    assert(_input != null);
+    assert(_output != null);
+    assert(_parts != null);
+
+    return Chip(
+      name: _name!,
+      input: _input!,
+      output: _output!,
+      parts: _parts!,
+    );
+  }
+}
+
 class Chip {
   Chip({
     required this.name,
