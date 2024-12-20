@@ -38,7 +38,7 @@ class Variable {
   int get hashCode => Object.hash(name, size, bus);
 
   Variable operator [](int size) {
-    if (bus != null) {
+    if (bus != null && bus!.end == null) {
       bus = (start: bus!.start, end: size);
     } else {
       bus = (start: size, end: null);
