@@ -26,6 +26,17 @@ class Variable {
     return '$name[${bus!.start}]';
   }
 
+  @override
+  bool operator ==(Object other) {
+    return other is Variable &&
+        name == other.name &&
+        size == other.size &&
+        bus == other.bus;
+  }
+
+  @override
+  int get hashCode => Object.hash(name, size, bus);
+
   Variable operator [](int size) {
     if (bus != null) {
       bus = (start: bus!.start, end: size);
@@ -56,6 +67,14 @@ class VariableTable {
 
   Iterable<Variable> get keys => table.keys;
   Iterable<Variable> get values => table.values;
+
+  @override
+  bool operator ==(Object other) {
+    return other is VariableTable && table == other.table;
+  }
+
+  @override
+  int get hashCode => table.hashCode;
 
   void forEach(void Function(Variable, Variable) action) =>
       table.forEach(action);

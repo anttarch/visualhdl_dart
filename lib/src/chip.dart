@@ -30,6 +30,18 @@ class ChipBuilder {
       parts: _parts!,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChipBuilder &&
+        name == other.name &&
+        input == other.input &&
+        output == other.output &&
+        parts == other.parts;
+  }
+
+  @override
+  int get hashCode => Object.hash(name, input, output, parts);
 }
 
 class Chip {
@@ -58,6 +70,18 @@ class Chip {
       parts: parts ?? this.parts,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Chip &&
+        name == other.name &&
+        input == other.input &&
+        output == other.output &&
+        parts == other.parts;
+  }
+
+  @override
+  int get hashCode => Object.hash(name, input, output, parts);
 
   String generateHDLPart() {
     String variableLine = '';
