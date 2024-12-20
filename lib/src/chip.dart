@@ -87,11 +87,13 @@ class Chip {
     String variableLine = '';
     input.forEach((k, v) {
       String key = k.bus == null ? k.name : k.toString();
-      variableLine += '$key=$v,';
+      String value = v.bus == null ? v.name : v.toString();
+      variableLine += '$key=$value,';
     });
     output.forEach((k, v) {
       String key = k.bus == null ? k.name : k.toString();
-      variableLine += '$key=$v';
+      String value = v.bus == null ? v.name : v.toString();
+      variableLine += '$key=$value';
 
       if (k != output.keys.last) {
         variableLine += ',';
