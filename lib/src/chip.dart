@@ -113,6 +113,9 @@ class Chip {
     Set<String> outputVariables =
         output.keys.map((v) => v.getSizeString()).toSet();
 
+    List<String> clockedInput =
+        input.keys.where((v) => v.clocked).map((v) => v.name).toList();
+
     String partsString = '';
     for (final part in parts) {
       partsString += part.generateHDLPart();
@@ -131,6 +134,7 @@ CHIP $name {
 
    PARTS:
       $partsString
+   ${clockedInput.isNotEmpty ? '\nCLOCKED ${clockedInput.join(', ')};' : ''}
 }''';
 
     return hdlChip;

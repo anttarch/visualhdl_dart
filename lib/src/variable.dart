@@ -1,12 +1,13 @@
 import 'dart:core';
 
 class Variable {
-  Variable(this.name, [this.size = 1]);
+  Variable(this.name, [this.size = 1, this.clocked = false]);
 
   Variable.on() : this('true');
 
   Variable.off() : this('false');
 
+  bool clocked;
   String name;
   int size;
   ({int start, int? end})? bus;
