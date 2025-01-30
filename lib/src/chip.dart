@@ -134,7 +134,7 @@ CHIP $name {
 
    PARTS:
       $partsString
-   ${clockedInput.isNotEmpty ? '\nCLOCKED ${clockedInput.join(', ')};' : ''}
+${clockedInput.isNotEmpty ? '\n   CLOCKED ${clockedInput.join(', ')};' : ''}
 }''';
 
     return hdlChip;
